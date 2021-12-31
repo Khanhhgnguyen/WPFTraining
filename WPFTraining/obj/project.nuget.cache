@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "sr2ScRzK7+/mvBK8rM1l2Kfxnu7aKMUzhrm6jpA3wMZePyrNkYw2SVZMmSMX9Q8ALJfAR18yka5LpIQtUc/2Rg==",
+  "success": true,
+  "projectFilePath": "D:\\Study\\WPF Training\\WPFTraining\\WPFTraining\\WPFTraining.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\khanhhgnguyen\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.31\\microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512",
+    "C:\\Users\\khanhhgnguyen\\.nuget\\packages\\prism.core\\8.1.97\\prism.core.8.1.97.nupkg.sha512",
+    "C:\\Users\\khanhhgnguyen\\.nuget\\packages\\prism.wpf\\8.1.97\\prism.wpf.8.1.97.nupkg.sha512"
+  ],
+  "logs": []
+}
