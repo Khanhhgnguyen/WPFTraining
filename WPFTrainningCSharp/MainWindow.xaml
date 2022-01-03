@@ -1,0 +1,261 @@
+﻿<Window x:Class="WPFTrainningCSharp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFTrainningCSharp"
+        mc:Ignorable="d"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:converter="clr-namespace:WPFTrainningCSharp.Converters"
+        xmlns:model="clr-namespace:WPFTrainningCSharp.Model"
+        xmlns:viewmodel="clr-namespace:WPFTrainningCSharp.ViewModel"
+        Title="WPFTraining" Height="650" Width="1200" Background="#FFCDE5F6"
+        x:Name="OrderDetailWindow">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="PriceTypes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:PriceType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="PaymentTerms" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:Paymentterm"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <converter:Converter x:Key="Convert"></converter:Converter>
+        <viewmodel:OrderDetailViewModel x:Key="OrderDetailViewModel" x:Name="OrderViewModel"></viewmodel:OrderDetailViewModel>
+        <viewmodel:MainWindowViewModel x:Key="MainWindowViewModel"></viewmodel:MainWindowViewModel>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Source={StaticResource MainWindowViewModel},Path=ShowResultSave}"  Modifiers="Ctrl" Key="S"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <!--General Info-->
+            <TextBlock Height="17" Width="120" TextWrapping="Wrap" FontSize="15" Margin="10,10,0,0" Grid.Column="0" FontFamily="Georgia" HorizontalAlignment="Left" VerticalAlignment="Top"><Bold>General Info</Bold></TextBlock>
+
+            <TextBlock HorizontalAlignment="Left" Margin="27,39,0,0" Text="Code:" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <TextBox x:Name="txtCode" DataContext="{StaticResource MainWindowViewModel}"
+                     Text="{Binding Code}" HorizontalAlignment="Left" Margin="116,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" IsEnabled="False" AutomationProperties.Name="txtCode" Grid.Column="0"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,60,0,0" Text="Currency Code" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <TextBox x:Name="txtCurrentCode" DataContext="{StaticResource MainWindowViewModel}"
+                     Text="{Binding CurrentCode, 
+                UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, 
+                ValidatesOnExceptions=True}" Validation.ErrorTemplate="{StaticResource errorTemple}" 
+                     HorizontalAlignment="Left" Margin="117,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="97" AutomationProperties.Name="txtCurrentCode" Grid.Column="0"/>
+            <TextBlock HorizontalAlignment="Left" Margin="224,60,0,0" Text="Price Level:" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <ComboBox x:Name="cbPriceLevel" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding Source={StaticResource PriceTypes}}" SelectedItem="{Binding Price}" 
+                      HorizontalAlignment="Left" 
+                      Margin="294,56,0,0" VerticalAlignment="Top" Width="82" Visibility="Visible">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource Convert}}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock HorizontalAlignment="Left" Margin="27,85,0,0" Text="Date" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <DatePicker x:Name="dbDate" DataContext="{StaticResource MainWindowViewModel}"
+                      SelectedDate="{Binding DateBegin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                        Validation.ErrorTemplate="{StaticResource errorTemple}"
+                        HorizontalAlignment="Left" Margin="116,78,0,0" VerticalAlignment="Top" Width="96" FirstDayOfWeek="Monday" DisplayDateStart="2021-01-01"/>
+            <TextBlock HorizontalAlignment="Left" Margin="224,86,0,0" Text="Due by:" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <DatePicker x:Name="dbDueBy" DataContext="{StaticResource MainWindowViewModel}"
+                      SelectedDate="{Binding DueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Validation.ErrorTemplate="{StaticResource errorTemple}"
+                      HorizontalAlignment="Left" Margin="294,82,0,0" VerticalAlignment="Top" Width="82" FirstDayOfWeek="Monday"/>
+
+            <!--Shipping Info-->
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="10,110,0,0" Text="Shipping Info" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontWeight="Bold" Grid.Column="0"/>
+
+            <TextBlock HorizontalAlignment="Left" Margin="27,134,0,0" Text="Ship to" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <ComboBox x:Name="cbShippingto" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding ShipTo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                      HorizontalAlignment="Left" Margin="116,129,0,0" VerticalAlignment="Top" Width="260"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,159,0,0" Text="Shipping Date" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <DatePicker x:Name="dbShippingDate" DataContext="{StaticResource MainWindowViewModel}"
+                      SelectedDate ="{Binding ShippingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Validation.ErrorTemplate="{StaticResource errorTemple}" HorizontalAlignment="Left" Margin="116,154,0,0" VerticalAlignment="Top" Width="96" FirstDayOfWeek="Monday"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,185,0,0" Text="Shipping Terms" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="0"/>
+            <TextBox HorizontalAlignment="Left" Margin="116,183,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260"/>
+
+            <!--Customer and Order Info-->
+            <TextBlock Height="16" Width="240" TextWrapping="WrapWithOverflow" FontSize="15" Margin="10,10,0,0" Grid.Column="1" FontFamily="Georgia" Text="" VerticalAlignment="Top" HorizontalAlignment="Left"><Bold>Customer and Order Info</Bold></TextBlock>
+
+            <TextBlock HorizontalAlignment="Left" Margin="27,39,0,0" Text="Customer:" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <ComboBox x:Name="cbCustomer" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding Customer, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Left" Margin="130,37,0,0" VerticalAlignment="Top" Width="260" Grid.Column="1" SelectionChanged="cbCustomer_SelectionChanged"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,64,0,0" Text="Order No." TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <TextBox x:Name="txtOrderNo" DataContext="{StaticResource MainWindowViewModel}"
+                     Text="{Binding OrderNo, 
+                UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, 
+                ValidatesOnExceptions=True}" Validation.ErrorTemplate="{StaticResource errorTemple}" 
+                     HorizontalAlignment="Left" Margin="130,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Grid.Column="1" AutomationProperties.Name="txtOrderNo"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,87,0,0" Text="Sale Person" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <ComboBox x:Name="cbSalePerson" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding SalePeople, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                      HorizontalAlignment="Left" Margin="130,84,0,0" VerticalAlignment="Top" Width="260" Grid.Column="1"/>
+
+            <!--Payment Info-->
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="10,110,0,0" Text="Payment Info" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" FontWeight="Bold" Grid.Column="1"/>
+
+            <TextBlock HorizontalAlignment="Left" Margin="27,134,0,0" Text="Bill to" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <ComboBox x:Name="cbBillto" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding BillTo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                      IsEnabled="{Binding Path=IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Left" Margin="130,129,0,0" VerticalAlignment="Top" Width="260" Grid.Column="1" SelectedIndex="1"/>
+            <TextBlock HorizontalAlignment="Left" Margin="27,160,0,0" Text="Payment Terms" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <ComboBox x:Name="cbPaymentterms" DataContext="{StaticResource MainWindowViewModel}"
+                      ItemsSource="{Binding Source={StaticResource PaymentTerms}}"
+                      IsEnabled="{Binding Path=IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Left" Margin="130,155,0,0" VerticalAlignment="Top" Width="260" Grid.Column="1">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource Convert}}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock HorizontalAlignment="Left" Margin="27,184,0,0" Text="Payment Method" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Georgia" Grid.Column="1"/>
+            <TextBox DataContext="{StaticResource MainWindowViewModel}" IsEnabled="{Binding Path=IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                x:Name="txtPaymentMethod" HorizontalAlignment="Left" Margin="130,182,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Grid.Column="1"/>
+
+            <TabControl Grid.Column="2">
+                <TabItem Header="Additional Info">
+                    <Grid Background="#FFE5E5E5">
+                        <TextBlock Margin="40"><Bold>Quotation Ref</Bold></TextBlock>
+                        <TextBox Margin="130, 0, 20, 90" Width="auto" Height="20"></TextBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Remarks">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <!--Data OrderDetail-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="auto" VerticalAlignment="Top" Width="auto">
+                <DataGrid x:Name="gridOrderDetail" 
+                              DataContext="{StaticResource OrderDetailViewModel}"
+                              ItemsSource="{Binding Order, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                              SelectedItem="{Binding OrderDetail, Mode=TwoWay}"
+                              CanUserDeleteRows="True" 
+                              Width="1200" Height="auto" AutoGenerateColumns="False" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch" >
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Aqua"></Setter>
+                            <Setter Property="BorderBrush" Value="Black"></Setter>
+                            <Setter Property="BorderThickness" Value="1"></Setter>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">Delete</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.SelectCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">Select</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--<DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">Save</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>-->
+                        <DataGridTextColumn Binding="{Binding Seq}" Width="50" Header="Seq" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding ItemCode}" Width="80" Header="Item Code" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding Description}" Width="200" Header="Description" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding UOM}" Width="80" Header="U.O.M" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding UnitPrice}" Width="100" Header="Unit Price" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="90" Header="Quantity"/>
+                        <DataGridTextColumn Binding="{Binding Amount}" Width="80" Header="Amount" IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Disc, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay}" Width="80" Header="Disc %"/>
+                        <DataGridTextColumn Binding="{Binding DiscAmt, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="80" Header="Disc Amt" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding FinalAmt, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="80" Header="Final Amt" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding Tax}" Width="80" Header="Tax(1)" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding TaxAmount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Header="TaxAmount" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+        <!--Total Summary-->
+        <Grid Grid.Row="2">
+            <StackPanel>
+                <GroupBox BorderBrush="Black" BorderThickness="1" Height="50" VerticalAlignment="Top" 
+                          DataContext="{StaticResource MainWindowViewModel}">
+                    <GroupBox.Resources>
+                        <Style TargetType="GroupBox">
+                            <Setter Property="Header">
+                                <Setter.Value>
+                                    <Bold>Tax</Bold>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupBox.Resources>
+                    <DockPanel>
+                        <Label >0: Tex Exemption</Label>
+                        <Label Margin="70,0,0,0">VAT:</Label>
+                        <TextBox x:Name="txtVAT" Text="{Binding SubVAT, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0, 0, 400, 0" Width="400" IsEnabled="False"></TextBox>
+                        <Button x:Name="btnSave" 
+                                DataContext="{StaticResource MainWindowViewModel}" 
+                                Command="{Binding Source={StaticResource MainWindowViewModel}, Path=SaveCommand}" IsEnabled="{Binding Source={StaticResource MainWindowViewModel}, Path=SaveEnable}">
+                            <AccessText>_Save</AccessText>
+                        </Button>
+                    </DockPanel>
+                </GroupBox>
+                <GroupBox BorderBrush="Black" BorderThickness="1" Height="50" VerticalAlignment="Top" DataContext="{StaticResource MainWindowViewModel}">
+                    <GroupBox.Resources>
+                        <Style TargetType="GroupBox">
+                            <Setter Property="Header">
+                                <Setter.Value>
+                                    <Bold Foreground="#FF38A3AE">Summary</Bold>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupBox.Resources>
+                    <DockPanel HorizontalAlignment="Left" Width="1188">
+                        <Label>Discount:</Label>
+                        <TextBox x:Name="txtSumDisc" Text="{Binding SumDisc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="False"  Height="auto" Width="120"></TextBox>
+                        <Label>Sub Total</Label>
+                        <TextBox x:Name="txtSubtotal" Text="{Binding SumAmount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="auto" Width="120" IsEnabled="False"></TextBox>
+                        <Label>Add. Discount</Label>
+                        <TextBox x:Name="txtAddDisc" Text="{Binding AddDisc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="auto" Width="120"></TextBox>
+                        <Label>Shipping</Label>
+                        <TextBox x:Name="txtShipping" Text="{Binding Ship, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="auto" Width="120"></TextBox>
+                        <Label>Tax(0.00%)</Label>
+                        <TextBox x:Name="txtSumTax" Text="{Binding SumTax, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="False" Height="auto" Width="120"></TextBox>
+                        <Label>Total</Label>
+                        <TextBox x:Name="txtTotal" Text="{Binding Total, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="False" Height="auto" Width="120"></TextBox>
+                    </DockPanel>
+                </GroupBox>
+                <DockPanel Margin="0,10,0,0">
+                    <Label>Note</Label>
+                    <TextBox DataContext="{StaticResource MainWindowViewModel}" x:Name="txtnote" Text="{Binding NoteData, Mode=TwoWay}" Height="80" Width="550"  VerticalScrollBarVisibility="Visible"></TextBox>
+                    <Label>Total</Label>
+                    <TextBox DataContext="{StaticResource MainWindowViewModel}" x:Name="txttotalString" Text="{Binding TotalString, Mode=TwoWay}" Height="80" Width="550"  VerticalScrollBarVisibility="Visible"></TextBox>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
